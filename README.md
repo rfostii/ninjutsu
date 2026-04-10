@@ -8,7 +8,7 @@ _Those who break the rules are scum... but those who abandon automation are wors
 
 ## ⚡ What is this?
 
-**Ninjutsu** is my personal dotfiles setup for quickly bootstrapping a macOS development environment.
+**Ninjutsu** is my personal dotfiles setup for quickly bootstrapping a macOS development environment that will make you an IT ninja.
 
 One command → and you get:
 - a configured shell

@@ -5,6 +5,6 @@ brew "eza"
 brew "tldr"
 
 # Apps
-cask "visual-studio-code"
-cask "raycast"
-cask "docker"
+# cask "visual-studio-code"
+# cask "raycast"
+# cask "docker"

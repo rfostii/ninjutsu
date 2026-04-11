@@ -7,7 +7,7 @@ gac() {
   git commit -m "$*"
 }
 
-gclean() {
+greset() {
   git reset --hard
   git clean -fd
 }

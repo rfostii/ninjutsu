@@ -86,11 +86,11 @@ Stages all changes and commits them with a message.
 gac "fix authentication bug"
 ```
 
-### 🧹 `gclean` — hard reset workspace
+### 🧹 `greset` — hard reset workspace
 ⚠️ Dangerous command — permanently discards local changes.
 
 ```bash
-gac "fix authentication bug"
+greset
 ```
 
 What it does:

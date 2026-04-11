@@ -1,0 +1,4 @@
+# Apps
+cask "visual-studio-code"
+cask "raycast"
+cask "docker"

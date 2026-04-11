@@ -16,7 +16,23 @@ fi
 # 📦 Packages
 # -----------------------------------
 echo "Installing packages from Brewfile..."
-brew bundle --file=./Brewfile
+echo "Select what to install:"
+echo "1) Core only"
+echo "2) Core + Apps"
+read -p "Enter choice [1-2]: " choice
+
+case $choice in
+  1)
+    brew bundle --file=./Brewfile.core
+    ;;
+  2)
+    brew bundle --file=./Brewfile.core
+    brew bundle --file=./Brewfile.apps
+    ;;
+  *)
+    echo "Invalid choice"
+    ;;
+esac
 
 # -----------------------------------
 # 🔗 Symlinks

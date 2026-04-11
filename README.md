@@ -72,11 +72,50 @@ Provided by the `git` plugin:
 
 ### 🔥 Custom Functions
 
-#### `gnew`
+### 🌿 `gnew` — create a new branch
 Create and switch to a new branch.
 
 ```bash
 gnew feature/login
+```
+
+#### ⚡ `gac` — add & commit
+Stages all changes and commits them with a message.
+
+```bash
+gac "fix authentication bug"
+```
+
+### 🧹 `gclean` — hard reset workspace
+⚠️ Dangerous command — permanently discards local changes.
+
+```bash
+gac "fix authentication bug"
+```
+
+What it does:
+- resets current branch to last commit
+- removes untracked files and folders
+
+### 📁 `mkcd` — create directory and enter
+Creates a folder and immediately moves into it.
+
+```bash
+mkcd project-name
+```
+
+### 📂 `c` — enhanced cd with listing
+Changes directory and automatically lists contents.
+
+```bash
+c ~/projects
+```
+
+Equivalent to:
+
+```bash
+cd ~/projects && eza
+```
 
 ---
 

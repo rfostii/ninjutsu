@@ -3,9 +3,10 @@
   email = fostiiruslan2706@gmail.com
 
 [alias]
-  st = status
-  co = checkout
-  br = branch
-  cm = commit
-  lg = log --oneline --graph --decorate --all
-  undo = reset --soft HEAD~1
+	st = status
+	co = checkout
+	br = branch
+	cm = commit
+	lg = log --oneline --graph --decorate --all
+	undo = reset --soft HEAD~1
+	amend = commit --amend --no-edit

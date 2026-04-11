@@ -1,4 +1,4 @@
-brew "git"
+# brew "git"
 brew "fzf"
 brew "bat"
 brew "eza"

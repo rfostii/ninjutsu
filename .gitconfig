@@ -1,7 +1,3 @@
-[user]
-  name =Your name
-  email = Your email
-
 [alias]
 	st = status
 	co = checkout

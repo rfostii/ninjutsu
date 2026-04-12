@@ -45,7 +45,7 @@ spinner() {
 # -----------------------------
 # ⚡ Step runner
 # -----------------------------
-run_step() {
+run_step_bg() {
   local msg=$1
   shift
 
@@ -62,17 +62,28 @@ run_step() {
   fi
 }
 
+run_step_fg() {
+  local msg=$1
+  shift
+
+  echo -e "${BLUE}➡️  $msg...${NC}"
+
+  "$@" || exit 1
+
+  echo -e "${GREEN}✔${NC}"
+}
+
 # -----------------------------
 # 🚀 Start
 # -----------------------------
 echo -e "${BLUE}🥷 Ninjutsu setup starting...${NC}"
 echo ""
 
-run_step "Cloning repository" git clone https://github.com/rfostii/ninjutsu "$TMP_DIR"
+run_step_bg "Cloning repository" git clone https://github.com/rfostii/ninjutsu "$TMP_DIR"
 
 cd "$TMP_DIR"
 
-run_step "Running setup" bash setup.sh
+run_step_fg "Running setup" bash setup.sh
 
 echo ""
 echo -e "${GREEN}🎉 Setup complete!${NC}"

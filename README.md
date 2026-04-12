@@ -21,10 +21,7 @@ One command → and you get:
 ## 🚀 Quick Start
 
 ```bash
-git clone <your-repo>
-cd Ninjutsu
-chmod +x setup.sh
-./setup.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/rfostii/ninjutsu/main/install.sh)"
 ```
 
 ## Examples

@@ -84,19 +84,5 @@ if [ ! -d "$HOME/.nvm" ]; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 fi
 
-# Load nvm
-export NVM_DIR="$HOME/.nvm"
-source "$NVM_DIR/nvm.sh"
-
-# Install latest LTS Node
-nvm install --lts
-nvm use --lts
-
-# -----------------------------------
-# 📦 pnpm
-# -----------------------------------
-echo "Installing pnpm..."
-npm install -g pnpm
-
 echo "✅ Setup complete!"
 echo "👉 Restart terminal or run: source ~/.zshrc"

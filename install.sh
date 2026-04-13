@@ -22,7 +22,7 @@ cleanup() {
   rm -rf "$TMP_DIR"
 }
 
-trap cleanup EXIT
+# trap cleanup EXIT
 
 # -----------------------------
 # 🔄 Spinner

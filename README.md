@@ -24,6 +24,38 @@ One command → and you get:
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/rfostii/ninjutsu/main/install.sh)"
 ```
 
+## 🥷 Ninjutsu CLI
+
+Ninjutsu is a lightweight developer environment toolkit that helps you bootstrap, maintain, and diagnose your setup with a single command.
+
+---
+
+### 🚀 Commands
+
+#### `ninjutsu install`
+
+Bootstrap your entire development environment from scratch.
+
+- Clones the repository
+- Runs the full setup
+- Installs the CLI globally
+
+```bash
+ninjutsu install
+```
+
+#### `ninjutsu doctor`
+
+Diagnoses your system and automatically fixes common issues.
+
+- Verifies shell configuration
+- Ensures Git is properly configured
+- Auto-fixes missing dependencies when possible
+
+```bash
+ninjutsu doctor
+```
+
 ## Examples
 
 ```bash

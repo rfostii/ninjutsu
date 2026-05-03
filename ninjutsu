@@ -10,17 +10,8 @@ case "$CMD" in
     bash "$INSTALL_DIR/install.sh"
     ;;
 
-  setup)
-    bash "$INSTALL_DIR/setup.sh"
-    ;;
-
   doctor)
     bash "$INSTALL_DIR/doctor.sh"
-    ;;
-
-  update)
-    echo "🔄 Updating Ninjutsu..."
-    git pull
     ;;
 
   help|*)
@@ -28,8 +19,6 @@ case "$CMD" in
     echo ""
     echo "Usage:"
     echo "  ninjutsu install   Install everything"
-    echo "  ninjutsu setup     Run setup only"
     echo "  ninjutsu doctor    Diagnose & fix"
-    echo "  ninjutsu update    Update repo"
     ;;
 esac

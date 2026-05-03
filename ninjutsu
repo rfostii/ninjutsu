@@ -1,0 +1,34 @@
+#!/bin/bash
+
+set -e
+
+CMD=${1:-help}
+
+case "$CMD" in
+  install)
+    bash "$(dirname "$0")/install.sh"
+    ;;
+
+  setup)
+    bash "$(dirname "$0")/setup.sh"
+    ;;
+
+  doctor)
+    bash "$(dirname "$0")/doctor.sh"
+    ;;
+
+  update)
+    echo "🔄 Updating Ninjutsu..."
+    git pull
+    ;;
+
+  help|*)
+    echo "🥷 Ninjutsu CLI"
+    echo ""
+    echo "Usage:"
+    echo "  ninjutsu install   Install everything"
+    echo "  ninjutsu setup     Run setup only"
+    echo "  ninjutsu doctor    Diagnose & fix"
+    echo "  ninjutsu update    Update repo"
+    ;;
+esac

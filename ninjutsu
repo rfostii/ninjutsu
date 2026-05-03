@@ -3,18 +3,19 @@
 set -e
 
 CMD=${1:-help}
+INSTALL_DIR="$HOME/.ninjutsu"
 
 case "$CMD" in
   install)
-    bash "$(dirname "$0")/install.sh"
+    bash "$INSTALL_DIR/install.sh"
     ;;
 
   setup)
-    bash "$(dirname "$0")/setup.sh"
+    bash "$INSTALL_DIR/setup.sh"
     ;;
 
   doctor)
-    bash "$(dirname "$0")/doctor.sh"
+    bash "$INSTALL_DIR/doctor.sh"
     ;;
 
   update)

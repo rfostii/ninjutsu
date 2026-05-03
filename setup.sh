@@ -1,102 +1,121 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 echo "🚀 Starting dev setup..."
 
-# -----------------------------------
-# 🍺 Homebrew
-# -----------------------------------
-if ! command -v brew &> /dev/null; then
-  echo "Installing Homebrew..."
+# -----------------------------
+# 🧠 Helpers
+# -----------------------------
+append_if_missing() {
+  local line="$1"
+  local file="$2"
+  grep -qxF "$line" "$file" 2>/dev/null || echo "$line" >> "$file"
+}
+
+ensure_file() {
+  local file="$1"
+  [ -f "$file" ] || touch "$file"
+}
+
+ZSHRC="$HOME/.zshrc"
+
+# -----------------------------
+# 📁 Ensure .zshrc
+# -----------------------------
+echo "🔧 Ensuring .zshrc exists..."
+ensure_file "$ZSHRC"
+
+# -----------------------------
+# 🍺 Homebrew (safe)
+# -----------------------------
+if ! command -v brew >/dev/null 2>&1; then
+  echo "🍺 Installing Homebrew..."
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# -----------------------------------
-# 📦 Packages
-# -----------------------------------
-echo "Installing packages from Brewfile..."
-echo "Select what to install:"
-echo "1) Core only"
-echo "2) Core + Apps"
-read -p "Enter choice [1-2]: " choice
+append_if_missing 'eval "$(/opt/homebrew/bin/brew shellenv)"' "$ZSHRC"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
-case $choice in
-  1)
-    brew bundle --file=./Brewfile.core
-    ;;
-  2)
-    brew bundle --file=./Brewfile.core
-    brew bundle --file=./Brewfile.apps
-    ;;
-  *)
-    echo "Invalid choice"
-    ;;
-esac
+# -----------------------------
+# 📦 Brew packages
+# -----------------------------
+if [ -f "./Brewfile.core" ]; then
+  echo "📦 Installing core packages..."
+  brew bundle --file=./Brewfile.core
+fi
 
-# -----------------------------------
-# 🔗 Symlinks
-# -----------------------------------
-echo "Linking config files..."
-
-ln -sf $(pwd)/.zshrc ~/.zshrc
-ln -sf $(pwd)/.gitconfig ~/.gitconfig
-ln -sf $(pwd)/aliases.zsh ~/aliases.zsh
-ln -sf $(pwd)/functions.zsh ~/functions.zsh
-
-# -----------------------------------
-# ⚡ Install Oh My Zsh
-# -----------------------------------
+# -----------------------------
+# 🧠 Oh My Zsh
+# -----------------------------
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  echo "Installing Oh My Zsh..."
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  echo "💻 Installing Oh My Zsh..."
+  RUNZSH=no CHSH=no KEEP_ZSHRC=yes \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 fi
 
-# -----------------------------------
-# 🔌 Zsh plugins
-# -----------------------------------
-ZSH_CUSTOM=${ZSH_CUSTOM:-~/.oh-my-zsh/custom}
+append_if_missing 'export ZSH="$HOME/.oh-my-zsh"' "$ZSHRC"
+append_if_missing 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting)' "$ZSHRC"
+append_if_missing 'source $ZSH/oh-my-zsh.sh' "$ZSHRC"
 
-[ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] && \
-git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+# -----------------------------
+# ⚡ Custom config
+# -----------------------------
+echo "⚡ Installing custom config..."
 
-[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] && \
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
+cp -f aliases.zsh "$HOME/aliases.zsh"
+cp -f functions.zsh "$HOME/functions.zsh"
 
-# -----------------------------------
-# 🧠 Git aliases
-# -----------------------------------
-echo "Setting git aliases..."
+append_if_missing 'source ~/aliases.zsh' "$ZSHRC"
+append_if_missing 'source ~/functions.zsh' "$ZSHRC"
+append_if_missing 'export PATH="$HOME/bin:$PATH"' "$ZSHRC"
 
-git config --global alias.st status
-git config --global alias.co checkout
-git config --global alias.br branch
-git config --global alias.cm commit
-git config --global alias.lg "log --oneline --graph --decorate --all"
-git config --global alias.undo "reset --soft HEAD~1"
-git config --global alias.amend "commit --amend --no-edit"
+# -----------------------------
+# 🔌 Plugins install (важливо!)
+# -----------------------------
+ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 
-# -----------------------------------
-# 🟢 NVM install
-# -----------------------------------
-if [ ! -d "$HOME/.nvm" ]; then
-  echo "Installing nvm..."
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ]; then
+  git clone https://github.com/zsh-users/zsh-autosuggestions \
+    "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
 fi
 
-# Load nvm
-export NVM_DIR="$HOME/.nvm"
-source "$NVM_DIR/nvm.sh"
+if [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ]; then
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting \
+    "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+fi
 
-# Install latest LTS Node
-nvm install --lts
-nvm use --lts
+# -----------------------------
+# 🔧 Git config
+# -----------------------------
+echo "🔧 Configuring Git..."
 
-# -----------------------------------
-# 📦 pnpm
-# -----------------------------------
-echo "Installing pnpm..."
-npm install -g pnpm
+ensure_git_config() {
+  local key=$1
+  local prompt=$2
+  local value
 
+  value=$(git config --global "$key" || true)
+
+  if [ -z "$value" ]; then
+    read -p "$prompt: " input
+    if [ -n "$input" ]; then
+      git config --global "$key" "$input"
+      echo "✔ Set $key"
+    else
+      echo "⚠ Skipped $key"
+    fi
+  else
+    echo "✔ $key already set ($value)"
+  fi
+}
+
+ensure_git_config "user.name" "Enter your Git name"
+ensure_git_config "user.email" "Enter your Git email"
+
+# -----------------------------
+# ✅ Done
+# -----------------------------
+echo ""
 echo "✅ Setup complete!"
-echo "👉 Restart terminal or run: source ~/.zshrc"
+echo "👉 Run: source ~/.zshrc"
